@@ -31,7 +31,29 @@ public class UserRepository {
   }
 
   public static User findById(int id) throws SQLException {
-    // TODO: finish this method
-    return null;
+    /** TODO: finish this method */
+    var query = "SELECT username, firstName, lastName, email, avatar FROM users WHERE id = ?";
+
+    try (var con = DB.getConnection();
+         var stmt = con.prepareStatement(query)) {
+
+      stmt.setInt(1, id);
+
+      try (var rs = stmt.executeQuery()) {
+
+        while (!rs.next()) {
+          return null;
+        }
+
+        var username = rs.getString("username");
+        var firstName = rs.getString("firstName");
+        var lastName = rs.getString("lastName");
+        var email = rs.getString("email");
+        var avatar = rs.getString("avatar");
+
+        return new User(id, username, firstName, lastName, email, avatar);
+
+      }
+    }
   }
 }
