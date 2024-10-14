@@ -21,13 +21,17 @@ public class Review {
 
     @Override
     public String toString() {
+        String formattedDate = reviewDate != null
+                ? reviewDate.getMonth() + " " + reviewDate.getDayOfMonth() + ", " + reviewDate.getYear()
+                : "N/A";
+
         return "Review{" +
                 "id='" + id + '\'' +
                 ", productId='" + productId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", rating=" + rating +
                 ", reviewText='" + reviewText + '\'' +
-                ", reviewDate=" + reviewDate +
+                ", reviewDate=" + formattedDate +
                 '}';
     }
 
@@ -76,7 +80,7 @@ public class Review {
     }
 
     public void setReviewDate(LocalDateTime reviewDate) {
-        this.reviewDate = reviewDate;
+        this.reviewDate = LocalDateTime.parse(String.valueOf(reviewDate));
     }
 
 }
