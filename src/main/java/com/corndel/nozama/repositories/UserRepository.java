@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepository {
+
+
   public static List<User> findAll() throws SQLException {
     var query = "SELECT id, username, firstName, lastName, email, avatar FROM users";
-
     try (var con = DB.getConnection();
         var stmt = con.createStatement();
         var rs = stmt.executeQuery(query);) {
@@ -61,6 +62,30 @@ public class UserRepository {
         }
       }
     }
+  }
+
+
+  public static User deleteUser(int id) throws SQLException{
+    var query = "DELETE FROM users WHERE id = ?";
+    try (var connection = DB.getConnection();
+         var statement = connection.prepareStatement(query)) {
+      statement.setInt(1, id);
+
+      System.out.println(statement);
+
+      int deletedRow = statement.executeUpdate();
+      System.out.println(deletedRow);
+    if (deletedRow > 0){
+      System.out.println("USER Deleted by ID " + id);
+    } else {
+      System.out.println("no user found by ID " + id );
+    }
+    }
+    return new User(id);
+  }
+  public static void main(String[] args) throws SQLException {
+    var user = UserRepository.deleteUser(23);
+    System.out.println(user);
   }
 }
 

@@ -17,6 +17,9 @@ public class User {
     this.avatar = avatar;
   }
 
+  public User(int id) {
+  }
+
   public Integer getId() {
     return id;
   }
