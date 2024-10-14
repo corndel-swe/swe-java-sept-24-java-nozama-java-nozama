@@ -1,7 +1,7 @@
 package com.corndel.nozama.models;
 
 public class Product {
-    private String id;
+    private int id;
     private String name;
     private String description;
     private float price;
@@ -20,7 +20,7 @@ public class Product {
                 '}';
     }
 
-    public Product(String id, String name, String description, float price, int stockQuantity, String imageURL) {
+    public Product(int id, String name, String description, float price, int stockQuantity, String imageURL) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,11 +29,11 @@ public class Product {
         this.imageURL = imageURL;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
