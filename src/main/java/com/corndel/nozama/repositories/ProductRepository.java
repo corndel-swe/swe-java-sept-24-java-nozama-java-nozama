@@ -44,6 +44,28 @@ public class ProductRepository {
         }
     }
 
+    public static List<Product> findByCategory(int categoryId) throws SQLException {
+        String query = "SELECT * FROM products " +
+                "INNER JOIN product_categories ON products.id = product_categories.productId " +
+                "INNER JOIN categories ON categories.id = product_categories.categoryId " +
+                "WHERE categories.id = ?";
+
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query);
+        ) {
+            stmt.setInt(1, categoryId);
+
+            try (var rs = stmt.executeQuery()) {
+                var products = new ArrayList<Product>();
+                while (rs.next()) {
+                    products.add(Product.ofResultSet(rs));
+                }
+
+                return products;
+            }
+        }
+    }
+
 
     public static Product create(Product product) throws SQLException {
         String query = "INSERT INTO products (name,description,price,stockQuantity,imageURL) VALUES(?,?,?,?,?) RETURNING *";
@@ -68,11 +90,19 @@ public class ProductRepository {
     }
 
 
-    public static void main(String[] args) throws SQLException {
-        System.out.println(findAll());
-        Product product = findById("72");
+    public static void main(String[] args) {
 
-        assert product != null;
-        System.out.println(create(product));
+        try {
+//
+//            System.out.println(findAll());
+//            Product product = findById("72");
+//
+//            assert product != null;
+//            System.out.println(create(product));
+
+            System.out.println(findByCategory(1));
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
     }
 }
