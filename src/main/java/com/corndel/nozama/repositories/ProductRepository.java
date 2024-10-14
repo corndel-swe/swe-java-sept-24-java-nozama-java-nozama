@@ -67,15 +67,48 @@ public class ProductRepository {
     }
 
 
+    public static List<Product> findByCategory(String category) throws SQLException {
+        // make the query
+        var query = "SELECT *\n";
+        query += "FROM products INNER JOIN product_categories ON products.id = product_categories.productId\n";
+        query += ("INNER JOIN categories ON categories.id = product_categories.categoryId WHERE categories.name = ?");
+
+        // try with resources - get connection
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query);) {
+
+            // sub in the id argument
+            stmt.setString(1, category);
+            try (var rs = stmt.executeQuery();) {
+
+                var products = new ArrayList<Product>();
+                while (rs.next()) {
+                    var id = rs.getInt("id");
+                    var name = rs.getString("name");
+                    var description = rs.getString("description");
+                    var price = rs.getFloat("price");
+                    var stockQuantity = rs.getInt("stockQuantity");
+                    var imageURL = rs.getString("imageURL");
+
+                    products.add(new Product(id, name, description, price, stockQuantity, imageURL));
+                }
+                return products;
+
+            }
+        }
+    }
+
 //    public static void main(String[] args) {
 //        String dbUrl = "jdbc:sqlite:nozama.db";
 //        try (var connection = DriverManager.getConnection(dbUrl)) {
 //            // call findall
 //            System.out.println(ProductRepository.findAll());
 //            System.out.println(ProductRepository.findById(3));
+//            System.out.println(ProductRepository.findByCategory("Baby"));
 //        } catch (Exception e){
 //            e.printStackTrace();
 //        }
 //    }
-}
 
+
+    }
