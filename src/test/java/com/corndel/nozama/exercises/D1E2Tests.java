@@ -31,7 +31,8 @@ public class D1E2Tests {
       var metadata = connection.getMetaData();
       var resultSet = metadata.getTables(null, null, "users", new String[] { "TABLE" });
       assert resultSet.next();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       fail(e);
     }
   }

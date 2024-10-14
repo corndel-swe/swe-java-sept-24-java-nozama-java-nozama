@@ -17,6 +17,11 @@ public class User {
     this.avatar = avatar;
   }
 
+  public User(int id, String username) {
+  this.username = username;
+  }
+
+
   public Integer getId() {
     return id;
   }
