@@ -115,11 +115,47 @@ public class UserRepository {
   }
 
 
+  public static User createUser(String username, String firstname, String lastname, String email, String password) throws SQLException {
+    var query = "INSERT INTO users (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?) RETURNING *";
+    try (var connection = DB.getConnection();
+         var statement = connection.prepareStatement(query)) {
+
+      statement.setString(1, username);
+      statement.setString(2, firstname);
+      statement.setString(3, lastname);
+      statement.setString(4, email);
+      statement.setString(5,password);
+      System.out.println(statement);
+      try (var resultSet = statement.executeQuery();) {
+        if(resultSet.next()){
+
+          var userId = resultSet.getInt("id");
+          var userName = resultSet.getString("username");
+          var firstName = resultSet.getString("firstname");
+          var lastName = resultSet.getString("lastname");
+          var userEmail = resultSet.getString("email");
+          var userAvatar = resultSet.getString("avatar");
+          System.out.println("USER CREATED");
+          return new User(userId, userName,firstName,lastName,userEmail,userAvatar);
+        } else {
+          System.out.println("USER was Not Created");
+          return null;
+        }
+
+      }
+    }
+
+  }
+
+
   public static void main(String[] args) throws SQLException {
     var user = UserRepository.deleteUser(23);
     System.out.println(user);
 
     var userLogin = UserRepository.loginUser("Ebba.Cole", "nz5H7F98ukot7yv");
     System.out.println(userLogin);
+
+    var userCreated = UserRepository.createUser("kai4", "Kai4","KAI","kai4@gmail.com","password123" );
+    System.out.println(userCreated + "userCreated");
   }
 }
