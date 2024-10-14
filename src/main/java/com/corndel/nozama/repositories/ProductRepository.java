@@ -98,17 +98,57 @@ public class ProductRepository {
         }
     }
 
-//    public static void main(String[] args) {
-//        String dbUrl = "jdbc:sqlite:nozama.db";
-//        try (var connection = DriverManager.getConnection(dbUrl)) {
-//            // call findall
-//            System.out.println(ProductRepository.findAll());
-//            System.out.println(ProductRepository.findById(3));
-//            System.out.println(ProductRepository.findByCategory("Baby"));
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
+    public static void createProduct(Product product) throws SQLException{
+        var query = "INSERT INTO products\n";
+        query += "(name, description, price, stockQuantity, imageURL)\n";
+        query += ("VALUES (?, ?, ?, ?, ?);");
 
+        // try with resources - get connection
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query);) {
 
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setFloat(3, product.getPrice());
+            stmt.setInt(4, product.getStockQuantity());
+            stmt.setString(5, product.getImageURL());
+
+            stmt.executeUpdate();
+           // try (var rs = stmt.executeUpdate();) {
+
+//                var products = new ArrayList<Product>();
+//                while (rs.next()) {
+//                    var id = rs.getInt("id");
+//                    var name = rs.getString("name");
+//                    var description = rs.getString("description");
+//                    var price = rs.getFloat("price");
+//                    var stockQuantity = rs.getInt("stockQuantity");
+//                    var imageURL = rs.getString("imageURL");
+//
+//                    products.add(new Product(id, name, description, price, stockQuantity, imageURL));
+//                }
+//                return products;
+                System.out.println("here.");
+          //  }
+
+        }
     }
+
+    public static void main(String[] args) {
+        String dbUrl = "jdbc:sqlite:nozama.db";
+        try (var connection = DriverManager.getConnection(dbUrl)) {
+            // call findall
+            System.out.println(ProductRepository.findAll());
+            System.out.println(ProductRepository.findById(3));
+            System.out.println(ProductRepository.findByCategory("Baby"));
+
+            Product product = new Product(999, "product_test", "a test", 10.99f, 1, "");
+            createProduct(product);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+}
