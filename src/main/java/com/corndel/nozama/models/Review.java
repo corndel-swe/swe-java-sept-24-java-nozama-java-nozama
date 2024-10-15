@@ -18,6 +18,13 @@ public class Review {
         this.reviewText = reviewText;
         this.reviewDate = reviewDate;
     }
+    public Review(String productId, String userId, int rating, String reviewText, LocalDateTime reviewDate) {
+        this.productId = productId;
+        this.userId = userId;
+        this.rating = rating;
+        this.reviewText = reviewText;
+        this.reviewDate = reviewDate;
+    }
 
     @Override
     public String toString() {
