@@ -24,7 +24,7 @@ public class UserRepository {
         var email = rs.getString("email");
         var avatar = rs.getString("avatar");
 
-        users.add(new User(id, username, firstName, lastName, email, avatar));
+        users.add(new User(id, username, firstName, lastName, email, avatar, null));
       }
 
       return users;
@@ -54,7 +54,7 @@ public class UserRepository {
           var email = rs.getString("email");
           var avatar = rs.getString("avatar");
 
-          User user = new User(id, username, firstName, lastName, email, avatar);
+          User user = new User(id, username, firstName, lastName, email, avatar, null);
           return user;
         } else {
           System.out.println("not a valid id.");
@@ -103,7 +103,7 @@ public class UserRepository {
           var email = resultSet.getString("email");
           var avatar = resultSet.getString("avatar");
           System.out.println("CORRECT USERNAME AND PASSWORD");
-          return new User(userId, userName,firstName,lastName,email,avatar);
+          return new User(userId, userName,firstName,lastName,email,avatar, null);
         } else {
           System.out.println("No userName or password was found");
           return null;
@@ -115,7 +115,7 @@ public class UserRepository {
   }
 
 
-  public static User createUser(String username, String firstname, String lastname, String email, String password) throws SQLException {
+  public static User createUser(String username, String firstname, String lastname, String email, String avatar, String password) throws SQLException {
 //    String defaultAvatar = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
 //
 //    String avatar = defaultAvatar;
@@ -143,7 +143,7 @@ public class UserRepository {
           var userAvatar = resultSet.getString("avatar");
           var userPassword = resultSet.getString("password");
           System.out.println("USER CREATED");
-          return new User(userId, userName,firstName,lastName,userEmail,userAvatar);
+          return new User(userId, userName,firstName,lastName,userEmail,userAvatar, userPassword);
         } else {
           System.out.println("USER was Not Created");
           return null;
@@ -162,7 +162,7 @@ public class UserRepository {
     var userLogin = UserRepository.loginUser("Ebba.Cole", "nz5H7F98ukot7yv");
     System.out.println(userLogin);
 
-    var userCreated = UserRepository.createUser("kai8", "Kai7","KAI7","kai8@gmail.com","password123" );
-    System.out.println(userCreated + "userCreated");
+//    var userCreated = UserRepository.createUser("kai8", "Kai7","KAI7","kai8@gmail.com","password123" );
+//    System.out.println(userCreated + "userCreated");
   }
 }

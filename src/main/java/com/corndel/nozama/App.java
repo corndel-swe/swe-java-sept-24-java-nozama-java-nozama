@@ -38,7 +38,8 @@ public class App {
                           body.getFirstName(),
                           body.getLastName(),
                           body.getEmail(),
-                          body.getAvatar()
+                          body.getAvatar(),
+                          body.getPassword()
                   );
                   System.out.println(user);
                   ctx.status(201);
