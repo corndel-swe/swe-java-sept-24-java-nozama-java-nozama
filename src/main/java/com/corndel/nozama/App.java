@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.controllers.ReviewController;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -27,6 +28,7 @@ public class App {
           var user = UserRepository.findById(id);
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
+    app.get("/products/{productId}/reviews", ReviewController::getReviewsByProduct);
   }
 
   public Javalin javalinApp() {
