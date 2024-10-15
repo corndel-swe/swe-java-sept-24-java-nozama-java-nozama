@@ -23,6 +23,7 @@ public class User {
 
   public User() {}
 
+
   public User(Integer id, String username, String firstName, String lastName, String email, String avatar, String password) {
     this.id = id;
     this.username = username;
@@ -30,8 +31,9 @@ public class User {
     this.lastName = lastName;
     this.email = email;
     this.avatar = (avatar == null || avatar.isEmpty()) ? DEFAULT_AVATAR : avatar;
+    this.password=password;
   }
-  private static final String DEFAULT_AVATAR = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
+  public static String DEFAULT_AVATAR = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
 
   public User(int id) {
   }
@@ -77,7 +79,7 @@ public class User {
   }
 
   public void setAvatar(String avatar) {
-    this.avatar = avatar;
+    this.avatar = (avatar == null || avatar.isEmpty()) ? DEFAULT_AVATAR : avatar;
   }
 
   @Override

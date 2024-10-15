@@ -116,11 +116,7 @@ public class UserRepository {
 
 
   public static User createUser(String username, String firstname, String lastname, String email, String avatar, String password) throws SQLException {
-//    String defaultAvatar = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
-//
-//    String avatar = defaultAvatar;
-    var query = "INSERT INTO users (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?) RETURNING *";
-
+    var query = "INSERT INTO users (username, firstName, lastName, email, avatar, password) VALUES (?, ?, ?, ?,?, ?) RETURNING *";
 
     try (var connection = DB.getConnection();
 
@@ -130,7 +126,8 @@ public class UserRepository {
       statement.setString(2, firstname);
       statement.setString(3, lastname);
       statement.setString(4, email);
-      statement.setString(5,password);
+      statement.setString(5, (avatar == null || avatar.isEmpty()) ? User.DEFAULT_AVATAR : avatar);
+      statement.setString(6,password);
       System.out.println(statement);
       try (var resultSet = statement.executeQuery();) {
         if(resultSet.next()){
@@ -162,7 +159,7 @@ public class UserRepository {
     var userLogin = UserRepository.loginUser("Ebba.Cole", "nz5H7F98ukot7yv");
     System.out.println(userLogin);
 
-//    var userCreated = UserRepository.createUser("kai8", "Kai7","KAI7","kai8@gmail.com","password123" );
-//    System.out.println(userCreated + "userCreated");
+    var userCreated = UserRepository.createUser("test2", "test","test","test2@gmail.com",null,"password123" );
+    System.out.println(userCreated + "userCreated");
   }
 }
