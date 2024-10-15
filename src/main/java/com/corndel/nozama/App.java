@@ -10,6 +10,8 @@ import io.javalin.http.HttpStatus;
 public class App {
     private Javalin app;
 
+    // Test comment
+
     public static void main(String[] args) {
         var app = new App().javalinApp();
         app.start(8080);
