@@ -116,8 +116,14 @@ public class UserRepository {
 
 
   public static User createUser(String username, String firstname, String lastname, String email, String password) throws SQLException {
+//    String defaultAvatar = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
+//
+//    String avatar = defaultAvatar;
     var query = "INSERT INTO users (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?) RETURNING *";
+
+
     try (var connection = DB.getConnection();
+
          var statement = connection.prepareStatement(query)) {
 
       statement.setString(1, username);
@@ -135,6 +141,7 @@ public class UserRepository {
           var lastName = resultSet.getString("lastname");
           var userEmail = resultSet.getString("email");
           var userAvatar = resultSet.getString("avatar");
+          var userPassword = resultSet.getString("password");
           System.out.println("USER CREATED");
           return new User(userId, userName,firstName,lastName,userEmail,userAvatar);
         } else {
@@ -155,7 +162,7 @@ public class UserRepository {
     var userLogin = UserRepository.loginUser("Ebba.Cole", "nz5H7F98ukot7yv");
     System.out.println(userLogin);
 
-    var userCreated = UserRepository.createUser("kai4", "Kai4","KAI","kai4@gmail.com","password123" );
+    var userCreated = UserRepository.createUser("kai8", "Kai7","KAI7","kai8@gmail.com","password123" );
     System.out.println(userCreated + "userCreated");
   }
 }
