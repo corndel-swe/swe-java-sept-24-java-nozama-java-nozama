@@ -3,7 +3,6 @@ package com.corndel.nozama.repositories;
 import com.corndel.nozama.DB;
 import com.corndel.nozama.models.Review;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,8 @@ public class ReviewRepository {
                     var rating = rs.getInt("rating");
                     var reviewText = rs.getString("reviewText");
                     var reviewDate = rs.getString("reviewDate");
-                    reviews.add(new Review(id, productId, userId, rating, reviewText, reviewDate));
+                    var formattedDate = reviewDate.replace(" ", "T") + "Z";
+                    reviews.add(new Review(id, productId, userId, rating, reviewText, formattedDate));
                 }
                 return reviews;
             }
