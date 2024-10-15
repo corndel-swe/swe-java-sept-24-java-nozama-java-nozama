@@ -62,6 +62,7 @@ public class App {
             }
     );
 
+    // can refactor to use Product rather than ProductRequest
     app.post(
             "/products/",
             ctx -> {
