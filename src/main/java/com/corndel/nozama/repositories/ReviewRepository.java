@@ -9,9 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewRepository {
-    public static void main(String[] args) throws SQLException {
-        System.out.println(createReview(5, 5, 5, "love it").getId());
-    }
 
     public static List<Review> getReviewsByProduct(int _productId) throws SQLException {
         var query = "SELECT * FROM reviews WHERE productId = ?";
@@ -45,30 +42,29 @@ public class ReviewRepository {
     }
 
     public static Review createReview(int productId, int userId, int rating, String reviewText) throws SQLException {
-        var insert_query = "INSERT INTO reviews (productId, userId, rating, reviewText) VALUES (?, ?, ?, ?)";
+        var query = "INSERT INTO reviews (productId, userId, rating, reviewText) VALUES (?, ?, ?, ?) RETURNING id, reviewDate;";
 
+        int lastId;
+        String reviewDate;
 
         try (var conn = DB.getConnection();
-             var stmt = conn.prepareStatement(insert_query)) {
+             var stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, productId);
             stmt.setInt(2, userId);
             stmt.setInt(3, rating);
             stmt.setString(4, reviewText);
 
-            stmt.executeUpdate();
-        }
-
-        var query = "SELECT id, reviewDate FROM reviews ORDER BY id DESC LIMIT 1;";
-        int lastId;
-        String reviewDate;
-        try (var conn = DB.getConnection();
-             var stmt = conn.prepareStatement(query)) {
 
             var rs = stmt.executeQuery();
-            lastId = rs.getInt("id");
-            reviewDate = rs.getString("reviewDate");
+            if (rs.next()) {
+                lastId = rs.getInt("id");
+                reviewDate = rs.getString("reviewDate");
+            } else {
+                throw new SQLException("Failed to insert review");
+            }
         }
 
         return new Review(lastId, productId, userId, rating, reviewText, reviewDate);
-    }}
+    }
+}
