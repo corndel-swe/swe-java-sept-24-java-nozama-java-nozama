@@ -15,18 +15,36 @@ public class D2E2 {
    * @see https://tech-docs.corndel.com/javalin/url-params.html
    * @return a configured Javalin instance
    */
+  public static void main(String[] args) {
+      var d2E2 = new D2E2().createApp();
+      d2E2.start(8080);
+  }
+
   public static Javalin createApp() {
     var app = Javalin.create();
     app.get(
+            // http://localhost:8080/sumup?n=15 > 120
         "/sumup",
         ctx -> {
           // TODO:
+            String nParam = ctx.queryParam("n");
+            int n = (nParam == null) ? 0 : Integer.parseInt(nParam);
+            int sum = 0;
+            for (int i = 1; i <= n; i++) {
+                sum += i;
+            }
+            ctx.result(String.valueOf(sum));
         });
 
     app.get(
+            // http://localhost:8080/multiply/2/3 > 6
         "/multiply/{x}/{y}",
         ctx -> {
           // TODO
+            var x = Integer.parseInt(ctx.pathParam("x"));
+            var y = Integer.parseInt(ctx.pathParam("y"));
+            int product = x*y;
+            ctx.result(String.valueOf(product));
         });
 
     return app;

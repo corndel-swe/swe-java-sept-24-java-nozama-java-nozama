@@ -1,6 +1,8 @@
 package com.corndel.nozama.exercises;
 
+import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
+import io.javalin.http.HttpStatus;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -29,18 +31,29 @@ public class D2E3 {
         "/alarms",
         ctx -> {
           // TODO
+            var alarms = AlarmRepository.findAll();
+            ctx.json(alarms);
         });
 
     app.get(
         "/alarms/{id}",
         ctx -> {
           // TODO
+          var id = Integer.parseInt(ctx.pathParam("id"));
+          var alarm = AlarmRepository.findById(id);
+            ctx.status(200);
+            ctx.json(alarm);
         });
 
     app.post(
         "/alarms",
         ctx -> {
           // TODO
+          Alarm body = ctx.bodyAsClass(Alarm.class);
+          Alarm alarm = AlarmRepository.create(body.getTime(), body.getMessage());
+          ctx.status(201); // created
+          ctx.json(alarm);
+
         });
 
     return app;

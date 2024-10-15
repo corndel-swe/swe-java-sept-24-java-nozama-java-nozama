@@ -22,9 +22,8 @@ public class D2E1 {
     Javalin app = Javalin.create();
 
     // TODO: add the GET /ping endpoint
-    app.get("/users", ctx -> {
-      var users = UserRepository.findAll();
-      ctx.json(users);
+    app.get("/ping", ctx -> {
+      ctx.result("pong");
     });
 
     return app;
