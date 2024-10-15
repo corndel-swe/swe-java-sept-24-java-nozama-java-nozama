@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.controllers.UserController;
 import com.corndel.nozama.controllers.ProductController;
 import com.corndel.nozama.controllers.ReviewController;
 import com.corndel.nozama.repositories.UserRepository;
@@ -28,6 +29,12 @@ public class App {
             var user = UserRepository.findById(id);
             ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
+
+
+    app.post("/users", UserController::createUser);
+  }
+
+
 
       
 
