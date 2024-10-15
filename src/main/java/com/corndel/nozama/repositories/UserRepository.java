@@ -58,7 +58,7 @@ public class UserRepository {
     }
   }
 
-  public static User createUser(createUserRequest accountDetails) throws SQLException {
+  public static User insertUser(createUserRequest accountDetails) throws SQLException {
     String username = accountDetails.username();
     String firstName = accountDetails.firstName();
     String lastName = accountDetails.lastName();
