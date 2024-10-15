@@ -17,4 +17,14 @@ public class UserController {
       ctx.status(400);
     }
   }
+
+  public static void deleteUser(Context ctx) {
+    int userId = Integer.parseInt(ctx.pathParam("userId"));
+    try {
+      UserRepository.removeUser(userId);
+      ctx.status(204);
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
+  }
 }

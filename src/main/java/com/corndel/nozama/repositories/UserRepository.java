@@ -92,12 +92,35 @@ public class UserRepository {
 
             try (ResultSet updateRs = updateStmt.executeQuery()) {
               updateRs.next();
-              System.out.println(updateRs.getString("avatar"));
               return new User(id, username, firstName, lastName, email, avatar);
             }
           }
         } else {
           return new User(id, username, firstName, lastName, email, null);
+        }
+      }
+    }
+  }
+
+  public static void removeUser(int id) throws SQLException, Exception {
+    String findQuery = "SELECT id, username from users WHERE id = ?";
+
+    try (Connection connection = DB.getConnection();
+         PreparedStatement findStmt = connection.prepareStatement(findQuery)) {
+
+      findStmt.setInt(1, id);
+
+      try (ResultSet findRs = findStmt.executeQuery()) {
+
+        if (!findRs.next()) {
+          throw new Exception("User not found. Can't remove what doesn't exist.");
+        }
+
+        String deleteQuery = "DELETE FROM users WHERE id = ?";
+
+        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+          deleteStmt.setInt(1, id);
+          deleteStmt.executeUpdate();
         }
       }
     }
