@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.models.Auth;
 import com.corndel.nozama.models.Product;
 import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.ProductRepository;
@@ -30,6 +31,14 @@ public class App {
                     var user = UserRepository.findById(id);
                     ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
                 });
+        app.post(
+                "/users",
+                ctx -> {
+                    User user = ctx.bodyAsClass(User.class);
+                    user = UserRepository.create(user);
+                    ctx.status(HttpStatus.CREATED).json(user);
+                });
+
         app.get(
                 "/products",
                 ctx -> {
