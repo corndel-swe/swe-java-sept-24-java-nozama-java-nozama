@@ -34,6 +34,14 @@ public class App {
                     ctx.status(HttpStatus.OK).json(ProductRepository.findAll());
                 }
         );
+        app.get(
+                "/products/{productId}",
+                ctx -> {
+                    var id = ctx.pathParam("productId");
+                    var product = ProductRepository.findById(id);
+                    ctx.status(HttpStatus.OK).json(product);
+                }
+        );
 
     }
 
