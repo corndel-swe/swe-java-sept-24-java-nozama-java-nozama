@@ -1,11 +1,8 @@
 package com.corndel.nozama;
 
-
+import com.corndel.nozama.controllers.UserController;
 import com.corndel.nozama.controllers.ProductController;
-
-
 import com.corndel.nozama.controllers.ReviewController;
-
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -33,6 +30,12 @@ public class App {
             ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
 
+
+    app.post("/users", UserController::createUser);
+
+
+
+
       
 
     app.get("/products/{productId}/reviews", ReviewController::getReviewsByProduct);
@@ -41,11 +44,10 @@ public class App {
 
         app.post("/products/{productId}/reviews", ReviewController::postReview);
 
-        ////////////////////////////////////////////////////////////////////////////////
-
-
-        app.get("/products", ProductController::getAllProducts); // Fetch all products
-        app.get("/products/{id}", ProductController::getProductById); // Fetch product by ID
+    app.get("/products", ProductController::getAllProducts);
+    app.get("/products/{id}", ProductController::getProductById);
+    app.post("/products", ProductController::createProduct);
+    app.get("/products/category/{categoryId}", ProductController::getProductsByCategory);
     }
 
     public Javalin javalinApp() {
