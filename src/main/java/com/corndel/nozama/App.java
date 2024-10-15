@@ -1,5 +1,7 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.models.Product;
+import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.ProductRepository;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
@@ -50,6 +52,13 @@ public class App {
                     ctx.status(HttpStatus.OK).json(products);
                 }
         );
+
+        app.post("/products",
+                ctx -> {
+                    Product product = ctx.bodyAsClass(Product.class);
+                    product = ProductRepository.create(product);
+                    ctx.status(HttpStatus.CREATED).json(product);
+                });
 
     }
 
