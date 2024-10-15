@@ -2,10 +2,7 @@ package com.corndel.nozama.repositories;
 
 import com.corndel.nozama.DB;
 import com.corndel.nozama.models.Review;
-import com.corndel.nozama.models.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -42,9 +39,30 @@ public class ReviewRepository {
         }return reviews;
     }
 
+    public static Review postReview (Review review) {
+
+        var query = "INSERT INTO reviews ( productId, userId, rating, reviewText, reviewDate) VALUES (?, ?, ?, ?, ?)";
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query)) {
+            stmt.setString(1, review.getProductId());
+            stmt.setString(2, review.getUserId());
+            stmt.setInt(3, review.getRating());
+            stmt.setString(4, review.getReviewText());
+            stmt.setObject(5, review.getReviewDate());
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return review;
+    }
+
     public static void main(String[] args) throws SQLException {
         var reviews = ReviewRepository.getReviewsByProduct("2");
+        var currentDate = LocalDateTime.now();
+        Review newReview = new Review("200", "77", 1, "I hate this product", currentDate);
 
+        postReview(newReview);
         for (var review: reviews) {
             System.out.println(review);
         }
