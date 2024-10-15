@@ -107,7 +107,7 @@ public class ProductRepository {
 //            }
 
             // Test findById
-            String productId = "1";
+            String productId = "300";
             Product product = findById(productId);
             if (product != null) {
                 System.out.println("Product found: " + product);
@@ -121,12 +121,12 @@ public class ProductRepository {
 //            System.out.println("Product created: " + newProduct);
 
             // Test findByCategory
-            String categoryId = "7";
-            System.out.println("Products in Category " + categoryId + ":");
-            List<Product> categoryProducts = findByCategory(categoryId);
-            for (Product catProduct : categoryProducts) {
-                System.out.println(catProduct);
-            }
+//            String categoryId = "7";
+//            System.out.println("Products in Category " + categoryId + ":");
+//            List<Product> categoryProducts = findByCategory(categoryId);
+//            for (Product catProduct : categoryProducts) {
+//                System.out.println(catProduct);
+//            }
 
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
