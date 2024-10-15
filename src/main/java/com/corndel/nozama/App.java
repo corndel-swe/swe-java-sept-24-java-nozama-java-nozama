@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.controllers.UserController;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -14,6 +15,8 @@ public class App {
 
   public App() {
     app = Javalin.create();
+
+    app.post("/users/login", UserController::userLogIn);
     app.get(
         "/",
         ctx -> {
