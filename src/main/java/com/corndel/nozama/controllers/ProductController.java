@@ -26,4 +26,16 @@ public class ProductController {
         }
     }
 
+    public static void createProduct(Context ctx) throws SQLException {
+        Product product = ctx.bodyAsClass(Product.class);
+        ProductRepository.createProduct(product);
+        ctx.status(201).json(product);
+    }
+
+    public static void getProductsByCategory(Context ctx) throws SQLException {
+        String categoryId = ctx.pathParam("categoryId");
+        List<Product> products = ProductRepository.findByCategory(categoryId);
+        ctx.json(products);
+    }
+
 }

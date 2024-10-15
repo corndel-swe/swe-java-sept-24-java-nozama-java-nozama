@@ -1,11 +1,7 @@
 package com.corndel.nozama;
 
-
 import com.corndel.nozama.controllers.ProductController;
-
-
 import com.corndel.nozama.controllers.ReviewController;
-
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
@@ -38,14 +34,12 @@ public class App {
     app.get("/products/{productId}/reviews", ReviewController::getReviewsByProduct);
 
 
-  
 
 
-        ////////////////////////////////////////////////////////////////////////////////
-
-
-        app.get("/products", ProductController::getAllProducts); // Fetch all products
-        app.get("/products/{id}", ProductController::getProductById); // Fetch product by ID
+    app.get("/products", ProductController::getAllProducts);
+    app.get("/products/{id}", ProductController::getProductById);
+    app.post("/products", ProductController::createProduct);
+    app.get("/products/category/{categoryId}", ProductController::getProductsByCategory);
     }
 
     public Javalin javalinApp() {
