@@ -32,7 +32,7 @@ public class App {
 
 
     app.post("/users", UserController::createUser);
-  }
+
 
 
 
