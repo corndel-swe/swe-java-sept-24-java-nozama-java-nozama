@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class ReviewController {
     public static void getReviewsByProduct(Context ctx)  {
-        var id = ctx.pathParam("productId");
+        int id = Integer.parseInt(ctx.pathParam("productId"));
         try {
             var reviews = ReviewRepository.getReviewsByProduct(id);
             ctx.json(reviews);

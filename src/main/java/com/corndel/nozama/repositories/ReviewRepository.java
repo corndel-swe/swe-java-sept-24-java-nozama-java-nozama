@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewRepository {
-  public static List<Review> getReviewsByProduct(String productId) throws SQLException {
+  public static List<Review> getReviewsByProduct(int productId) throws SQLException {
     List<Review> reviews = new ArrayList<>();
     var query = "SELECT * FROM reviews JOIN products ON products.id = reviews.productId WHERE reviews.productId = ?";
 
     try (var connection = DB.getConnection();
          var stmt = connection.prepareStatement(query)) {
 
-      stmt.setString(1, productId);
+      stmt.setInt(1, productId);
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy, h:mm:ss a");
 
       try (ResultSet resultSet = stmt.executeQuery()) {
         while (resultSet.next()) {
-          String id = resultSet.getString("id");
-          String userId = resultSet.getString("userId");
+          int id = resultSet.getInt("id");
+          int userId = resultSet.getInt("userId");
           int rating = resultSet.getInt("rating");
           String reviewText = resultSet.getString("reviewText");
           String reviewDateStr = resultSet.getString("reviewDate");
@@ -43,8 +43,8 @@ public class ReviewRepository {
     var query = "INSERT INTO reviews (productId, userId, rating, reviewText) VALUES (?, ?, ?, ?)";
     try (var con = DB.getConnection();
          var stmt = con.prepareStatement(query)) {
-      stmt.setString(1, review.getProductId());
-      stmt.setString(2, review.getUserId());
+      stmt.setInt(1, review.getProductId());
+      stmt.setInt(2, review.getUserId());
       stmt.setInt(3, review.getRating());
       stmt.setString(4, review.getReviewText());
 

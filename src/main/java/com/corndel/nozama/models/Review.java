@@ -3,14 +3,14 @@ package com.corndel.nozama.models;
 import java.time.LocalDateTime;
 
 public class Review {
-    private String id;
-    private String productId;
-    private String userId;
+    private int id;
+    private int productId;
+    private int userId;
     private int rating;
     private String reviewText;
     private LocalDateTime reviewDate;
 
-    public Review(String productId, String id, String userId, int rating, String reviewText, LocalDateTime reviewDate) {
+    public Review(int productId, int id, int userId, int rating, String reviewText, LocalDateTime reviewDate) {
         this.productId = productId;
         this.id = id;
         this.userId = userId;
@@ -18,7 +18,7 @@ public class Review {
         this.reviewText = reviewText;
         this.reviewDate = reviewDate;
     }
-    public Review(String productId, String userId, int rating, String reviewText, LocalDateTime reviewDate) {
+    public Review(int productId, int userId, int rating, String reviewText, LocalDateTime reviewDate) {
         this.productId = productId;
         this.userId = userId;
         this.rating = rating;
@@ -42,27 +42,27 @@ public class Review {
                 '}';
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
