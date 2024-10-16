@@ -8,9 +8,9 @@ public class Review {
     private int userId;
     private int rating;
     private String reviewText;
-    private LocalDateTime reviewDate;
+    private String reviewDate;
 
-    public Review(int productId, int id, int userId, int rating, String reviewText, LocalDateTime reviewDate) {
+    public Review(int productId, int id, int userId, int rating, String reviewText, String reviewDate) {
         this.productId = productId;
         this.id = id;
         this.userId = userId;
@@ -18,27 +18,22 @@ public class Review {
         this.reviewText = reviewText;
         this.reviewDate = reviewDate;
     }
-    public Review(int productId, int userId, int rating, String reviewText, LocalDateTime reviewDate) {
+    public Review(int productId, int userId, int rating, String reviewText) {
         this.productId = productId;
         this.userId = userId;
         this.rating = rating;
         this.reviewText = reviewText;
-        this.reviewDate = reviewDate;
     }
 
     @Override
     public String toString() {
-        String formattedDate = reviewDate != null
-                ? reviewDate.getMonth() + " " + reviewDate.getDayOfMonth() + ", " + reviewDate.getYear()
-                : "N/A";
-
         return "Review{" +
                 "id='" + id + '\'' +
                 ", productId='" + productId + '\'' +
                 ", userId='" + userId + '\'' +
                 ", rating=" + rating +
                 ", reviewText='" + reviewText + '\'' +
-                ", reviewDate=" + formattedDate +
+                ", reviewDate=" + reviewDate +
                 '}';
     }
 
@@ -82,12 +77,12 @@ public class Review {
         this.reviewText = reviewText;
     }
 
-    public LocalDateTime getReviewDate() {
+    public String getReviewDate() {
         return reviewDate;
     }
 
-    public void setReviewDate(LocalDateTime reviewDate) {
-        this.reviewDate = LocalDateTime.parse(String.valueOf(reviewDate));
-    }
+//    public void setReviewDate(String reviewDate) {
+//        this.reviewDate = LocalDateTime.parse(String.valueOf(reviewDate));
+//    }
 
 }
