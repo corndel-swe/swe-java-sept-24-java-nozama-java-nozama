@@ -27,9 +27,7 @@ public class ReviewRepository {
           int userId = resultSet.getInt("userId");
           int rating = resultSet.getInt("rating");
           String reviewText = resultSet.getString("reviewText");
-          String reviewDateStr = resultSet.getString("reviewDate");
-          LocalDateTime reviewDate = null;
-          reviewDate = LocalDateTime.parse(reviewDateStr.replace("Z", ""));
+          String reviewDate = resultSet.getString("reviewDate");
           Review review = new Review(productId, id, userId, rating, reviewText, reviewDate);
           reviews.add(review);
         }
@@ -39,28 +37,26 @@ public class ReviewRepository {
   }
 
   public static Review postReview(Review review) throws SQLException {
+    int productId = review.getProductId();
+    int userId = review.getUserId();
+    int rating = review.getRating();
+    String reviewText = review.getReviewText();
 
     var query = "INSERT INTO reviews (productId, userId, rating, reviewText) VALUES (?, ?, ?, ?)";
     try (var con = DB.getConnection();
          var stmt = con.prepareStatement(query)) {
-      stmt.setInt(1, review.getProductId());
-      stmt.setInt(2, review.getUserId());
-      stmt.setInt(3, review.getRating());
-      stmt.setString(4, review.getReviewText());
+      stmt.setInt(1, productId);
+      stmt.setInt(2, userId);
+      stmt.setInt(3, rating);
+      stmt.setString(4, reviewText);
 
-      stmt.executeUpdate(); // <-- currently returns number of rows affected as an int, change it to a result set to get access to the row inserted using executeQuery() in combination with RETURNING * in SQL query
+      try (var rs = stmt.executeQuery()) {
+        rs.next();
+        int id = rs.getInt("id");
+        String reviewDate = rs.getString("reviewDate");
+        Review postedReview = new Review(productId, id, userId, rating, reviewText, reviewDate);
+        return postedReview;
+      }
     }
-    return review;
   }
-
-//  public static void main(String[] args) throws SQLException {
-//    var reviews = ReviewRepository.getReviewsByProduct("2");
-//    var currentDate = LocalDateTime.now();
-//    Review newReview = new Review("200", "77", 1, "I hate this product", currentDate);
-//
-//    postReview(newReview);
-//    for (var review : reviews) {
-//      System.out.println(review);
-//    }
-//  }
 }
