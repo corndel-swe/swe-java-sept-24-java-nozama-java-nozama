@@ -81,8 +81,4 @@ public class Review {
         return reviewDate;
     }
 
-//    public void setReviewDate(String reviewDate) {
-//        this.reviewDate = LocalDateTime.parse(String.valueOf(reviewDate));
-//    }
-
 }
