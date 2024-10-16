@@ -35,6 +35,8 @@ public class App {
 
     app.post("/users", UserController::createUser);
 
+    app.delete("/users/{userId}", UserController::deleteUser);
+
 
 
 
