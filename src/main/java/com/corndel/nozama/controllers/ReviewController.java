@@ -8,15 +8,23 @@ import java.sql.SQLException;
 
 
 public class ReviewController {
-    public static void getReviewsByProduct(Context ctx) throws SQLException {
+    public static void getReviewsByProduct(Context ctx)  {
         var id = ctx.pathParam("productId");
-        var reviews = ReviewRepository.getReviewsByProduct(id);
-        ctx.json(reviews);
+        try {
+            var reviews = ReviewRepository.getReviewsByProduct(id);
+            ctx.json(reviews);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public static void postReview(Context ctx) {
         Review newReview = ctx.bodyAsClass(Review.class);
-        Review createdReview = ReviewRepository.postReview(newReview);
-        ctx.status(201).json(createdReview);
+        try {
+            Review createdReview = ReviewRepository.postReview(newReview);
+            ctx.status(201).json(createdReview);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 }
