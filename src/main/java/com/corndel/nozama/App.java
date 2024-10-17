@@ -1,10 +1,7 @@
 package com.corndel.nozama;
 
 import com.corndel.nozama.controllers.UserController;
-import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
-import io.javalin.http.HttpStatus;
-import com.corndel.nozama.models.User;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 
