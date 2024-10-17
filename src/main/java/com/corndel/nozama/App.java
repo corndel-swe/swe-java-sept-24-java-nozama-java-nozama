@@ -46,7 +46,7 @@ app.get("/products/{productId}/reviews/average", ReviewController::getAverageRat
 
 
 
-        app.post("/products/{productId}/reviews", ReviewController::postReview);
+    app.post("/products/{productId}/reviews", ReviewController::postReview);
 
     app.get("/products", ProductController::getAllProducts);
     app.get("/products/{id}", ProductController::getProductById);

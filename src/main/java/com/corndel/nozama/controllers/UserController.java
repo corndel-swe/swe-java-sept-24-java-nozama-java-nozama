@@ -1,4 +1,6 @@
 package com.corndel.nozama.controllers;
+import com.corndel.nozama.createUserRequest;
+import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -37,27 +39,27 @@ public class UserController {
       UserRepository.removeUser(userId);
       ctx.status(204);
     } catch (Exception e) {
-      System.err.println(e.getMessage());
-      throw new NotFoundResponse("User not found");
+        System.err.println(e.getMessage());
+        throw new NotFoundResponse("User not found");
+
+    }}
 
 
+        public static void userLogIn (Context ctx){
+            try {
 
-public class UserController {
-    public static void userLogIn(Context ctx) {
-        try {
+                var logInRequest = ctx.bodyAsClass(UserRequest.class);
+                var user = UserRepository.logUserIn(logInRequest.username(),
+                        logInRequest.firstName(), logInRequest.lastName(), logInRequest.email(),
+                        logInRequest.avatar(), logInRequest.password());
 
-            var logInRequest = ctx.bodyAsClass(UserRequest.class);
-            var user = UserRepository.logUserIn(logInRequest.username(),
-                    logInRequest.firstName(),logInRequest.lastName(), logInRequest.email(),
-                    logInRequest.avatar(), logInRequest.password());
-
-            ctx.json(user);
-        } catch (Exception e) {
-            // test
-            System.err.println(e.getMessage());
+                ctx.json(user);
+            } catch (Exception e) {
+                // test
+                System.err.println(e.getMessage());
+            }
         }
     }
-}
 
 
 record UserRequest(String username, String firstName , String lastName, String email, String avatar, String password) { }
