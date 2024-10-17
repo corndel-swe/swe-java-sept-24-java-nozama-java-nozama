@@ -1,6 +1,5 @@
 package com.corndel.nozama.controllers;
 
-import com.corndel.nozama.App;
 import com.corndel.nozama.models.Review;
 import com.corndel.nozama.repositories.ReviewRepository;
 import io.javalin.http.Context;
