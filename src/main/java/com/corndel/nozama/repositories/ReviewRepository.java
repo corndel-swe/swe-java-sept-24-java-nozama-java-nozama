@@ -81,7 +81,5 @@ public class ReviewRepository {
       return averageRating;
   }
 
-  public static void main(String[] args) throws SQLException {
-    System.out.println(getAverageRating(100));
-  }
+
 }
