@@ -26,16 +26,13 @@ public class App {
                 get("/category/{category}",
                         ProductController::getProductsByCategory);
                 post("", ProductController::addNewProduct);
-                get("/{productId}/reviews", ReviewController::getReviewByProduct);
-                get("/{productId}/reviews/average", ReviewController::getAvgRatingByProduct);
-                post("/{productId}/reviews", ReviewController:: createReview);
             });
         });
     });
 
     app.exception(Exception.class, (e, ctx) -> {
         ctx.status(500);
-        ctx.result("An unkown error occurred.");
+        ctx.result("An unknown error occurred.");
     });
 
     app.get(
