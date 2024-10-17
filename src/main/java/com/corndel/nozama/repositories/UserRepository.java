@@ -122,6 +122,7 @@ public class UserRepository {
 
          var statement = connection.prepareStatement(query)) {
 
+
       statement.setString(1, username);
       statement.setString(2, firstname);
       statement.setString(3, lastname);
