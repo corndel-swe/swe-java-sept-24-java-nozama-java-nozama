@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.controllers.ProductController;
 import com.corndel.nozama.models.Product;
 import com.corndel.nozama.models.ProductRequest;
 import com.corndel.nozama.repositories.ProductRepository;
@@ -31,57 +32,12 @@ public class App {
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
 
-    app.get(
-            "/products/",
-            ctx -> {
-                var products = ProductRepository.findAll();
-                ctx.json(products).status(200);
-            });
-    app.get(
-            "/products/{productId}",
-            ctx -> {
-                var id = Integer.parseInt(ctx.pathParam("productId"));
-                var product = ProductRepository.findById(id);
-                if(product!=null) {
-                    ctx.json(product).status(200);
-                }else{
-                    ctx.status(400);
-                }
-            }
-    );
-    app.get(
-            "/products/category/{category}",
-            ctx -> {
-                var category = ctx.pathParam("category");
-                var products = ProductRepository.findByCategory(category);
-                if(products!=null) {
-                    ctx.json(products).status(200);
-                }else{
-                    ctx.status(400);
-                }
-            }
-    );
-
+    app.get("/products", ProductController::getAllProducts);
+    app.get("/products/{productId}", ProductController::getProductById);
+    app.get("/products/category/{category}",
+            ProductController::getProductsByCategory);
     // can refactor to use Product rather than ProductRequest
-    app.post(
-            "/products/",
-            ctx -> {
-                ProductRequest body = ctx.bodyAsClass(ProductRequest.class);
-                // dummy id -1, will be auto assigned in dB
-                Product product = new Product(
-                        -1, body.name(), body.description(), body.price(),
-                        body.stockQuantity(), body.imageURL()
-                );
-                System.out.println(product);
-                Product response = ProductRepository.createProduct(product);
-                if(response!=null){
-                    ctx.json(response).status(200);
-                }else{
-                    ctx.status(400);
-                }
-            }
-    );
-
+    app.post("/products/", ProductController::addNewProduct);
   }
 
   public Javalin javalinApp() {
