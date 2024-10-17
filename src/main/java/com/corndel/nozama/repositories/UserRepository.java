@@ -75,13 +75,14 @@ public class UserRepository {
 
       int deletedRow = statement.executeUpdate();
       System.out.println(deletedRow);
-      if (deletedRow > 0) {
+      if (deletedRow > 0){
         System.out.println("USER Deleted by ID " + id);
+        return new User(id);
       } else {
-        System.out.println("no user found by ID " + id);
+        System.out.println("no user found by ID " + id );
+        return null;
       }
     }
-    return new User(id);
   }
 
 
@@ -115,11 +116,52 @@ public class UserRepository {
   }
 
 
+  public static User createUser(String username, String firstname, String lastname, String email, String avatar, String password) throws SQLException {
+    var query = "INSERT INTO users (username, firstName, lastName, email, avatar, password) VALUES (?, ?, ?, ?,?, ?) RETURNING *";
+
+    try (var connection = DB.getConnection();
+
+         var statement = connection.prepareStatement(query)) {
+
+
+      statement.setString(1, username);
+      statement.setString(2, firstname);
+      statement.setString(3, lastname);
+      statement.setString(4, email);
+      statement.setString(5, (avatar == null || avatar.isEmpty()) ? User.DEFAULT_AVATAR : avatar);
+      statement.setString(6,password);
+      System.out.println(statement);
+      try (var resultSet = statement.executeQuery();) {
+        if(resultSet.next()){
+
+          var userId = resultSet.getInt("id");
+          var userName = resultSet.getString("username");
+          var firstName = resultSet.getString("firstname");
+          var lastName = resultSet.getString("lastname");
+          var userEmail = resultSet.getString("email");
+          var userAvatar = resultSet.getString("avatar");
+          var userPassword = resultSet.getString("password");
+          System.out.println("USER CREATED");
+          return new User(userId, userName,firstName,lastName,userEmail,userAvatar, userPassword);
+        } else {
+          System.out.println("USER was Not Created");
+          return null;
+        }
+
+      }
+    }
+
+  }
+
+
   public static void main(String[] args) throws SQLException {
     var user = UserRepository.deleteUser(23);
     System.out.println(user);
 
     var userLogin = UserRepository.loginUser("Ebba.Cole", "nz5H7F98ukot7yv");
     System.out.println(userLogin);
+
+    var userCreated = UserRepository.createUser("test2", "test","test","test2@gmail.com",null,"password123" );
+    System.out.println(userCreated + "userCreated");
   }
 }

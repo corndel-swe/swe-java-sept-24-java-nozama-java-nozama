@@ -1,6 +1,7 @@
 package com.corndel.nozama;
 
 import com.corndel.nozama.controllers.UserController;
+import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import static io.javalin.apibuilder.ApiBuilder.*;
 import com.corndel.nozama.controllers.ReviewController;
@@ -33,7 +34,12 @@ public class App {
                   get("", UserController::getAllUsers);
                   get("/{userId}", UserController::getUserById);
                   post("/login", UserController::loginUser);
+                  delete("{userId}",UserController::deleteUser);
               });
+            path("user", () -> {
+                post("/login", UserController::createUser);
+
+            });
         });
     });
 
@@ -44,7 +50,7 @@ public class App {
 
   }
 
-    public Javalin javalinApp() {
+  public Javalin javalinApp() {
     return app;
   }
 }
