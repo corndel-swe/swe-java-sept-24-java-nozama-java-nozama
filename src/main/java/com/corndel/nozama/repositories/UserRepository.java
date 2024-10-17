@@ -58,49 +58,37 @@ public class UserRepository {
     }
   }
 
-  public static User insertUser(createUserRequest accountDetails) throws SQLException {
-    String username = accountDetails.username();
-    String firstName = accountDetails.firstName();
-    String lastName = accountDetails.lastName();
-    String email = accountDetails.email();
-    String password = accountDetails.password();
+  public static LoginResponse logUserIn(String username, String firstname , String lastname, String mail, String Avatar, String password) throws SQLException, Exception {
+    // Check if user is null
 
-    String insertQuery = "INSERT INTO users (username, firstName, lastName, email, password) VALUES (?, ?, ?, ?, ?) RETURNING *";
+    var query = "SELECT id, username, firstName, lastName, email, avatar, password FROM users WHERE username = ?";
 
-    try (Connection con = DB.getConnection();
-         PreparedStatement insertStmt = con.prepareStatement(insertQuery)) {
+    try (var con = DB.getConnection();
+         var stmt = con.prepareStatement(query)) {
 
-      insertStmt.setString(1, username);
-      insertStmt.setString(2, firstName);
-      insertStmt.setString(3, lastName);
-      insertStmt.setString(4, email);
-      insertStmt.setString(5, password);
+      stmt.setString(1, username);
+      try (var rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          var usernameDB = rs.getString("username");
+          var firstName = rs.getString("firstName");
+          var lastName = rs.getString("lastName");
+          var email = rs.getString("email");
+          var avatar = rs.getString("avatar");
+          var passwordDB = rs.getString("password");
+          System.out.println(passwordDB);
 
-      try (ResultSet insertRs = insertStmt.executeQuery()) {
-
-        insertRs.next();
-        int id = insertRs.getInt("id");
-
-        if (accountDetails.avatar() != null) {
-          String avatar = accountDetails.avatar();
-          String updateQuery = "UPDATE users SET avatar = ? WHERE id = ? RETURNING *";
-
-          try (PreparedStatement updateStmt = con.prepareStatement(updateQuery)) {
-
-            updateStmt.setString(1, avatar);
-            updateStmt.setInt(2, id);
-
-            try (ResultSet updateRs = updateStmt.executeQuery()) {
-              updateRs.next();
-              return new User(id, username, firstName, lastName, email, avatar);
-            }
+          if (passwordDB.equals(password)) {
+            System.out.println("password are a match, Logging in");
+            return new LoginResponse(username,password);
           }
-        } else {
-          return new User(id, username, firstName, lastName, email, null);
-        }
+          else {
+            throw new Exception("password are not a match, cant log in");
+
+       
       }
     }
   }
+    }
 
   public static void removeUser(int id) throws SQLException, Exception {
     String findQuery = "SELECT id, username from users WHERE id = ?";
@@ -124,5 +112,10 @@ public class UserRepository {
         }
       }
     }
+
+    System.out.println("No user found to log in");
+    return null;
   }
-}
+
+  record LoginResponse(String username, String password) { }
+

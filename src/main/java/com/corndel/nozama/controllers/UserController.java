@@ -1,30 +1,27 @@
 package com.corndel.nozama.controllers;
-
-import com.corndel.nozama.createUserRequest;
-import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.UserRepository;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
+import java.sql.SQLException;
+
 
 public class UserController {
-  public static void createUser(Context ctx) {
-    createUserRequest body = ctx.bodyAsClass(createUserRequest.class);
-    try {
-      User user = UserRepository.insertUser(body);
-      ctx.status(201);
-      ctx.json(user);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-      ctx.status(400);
-    }
-  }
+    public static void userLogIn(Context ctx) {
+        try {
 
-  public static void deleteUser(Context ctx) {
-    int userId = Integer.parseInt(ctx.pathParam("userId"));
-    try {
-      UserRepository.removeUser(userId);
-      ctx.status(204);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
+            var logInRequest = ctx.bodyAsClass(UserRequest.class);
+            var user = UserRepository.logUserIn(logInRequest.username(),
+                    logInRequest.firstName(),logInRequest.lastName(), logInRequest.email(),
+                    logInRequest.avatar(), logInRequest.password());
+
+            ctx.json(user);
+        } catch (Exception e) {
+            // test
+            System.err.println(e.getMessage());
+        }
     }
-  }
 }
+
+
+record UserRequest(String username, String firstName , String lastName, String email, String avatar, String password) { }
