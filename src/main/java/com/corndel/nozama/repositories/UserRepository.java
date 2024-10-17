@@ -53,15 +53,15 @@ public class UserRepository {
     }
   }
 
-  public static User logUserIn(int id, String password) throws SQLException, Exception {
+  public static LoginResponse logUserIn(String username, String firstname , String lastname, String mail, String Avatar, String password) throws SQLException, Exception {
     // Check if user is null
 
-    var query = "SELECT id, username, firstName, lastName, email, avatar, password FROM users WHERE id = ?";
+    var query = "SELECT id, username, firstName, lastName, email, avatar, password FROM users WHERE username = ?";
 
     try (var con = DB.getConnection();
          var stmt = con.prepareStatement(query)) {
 
-      stmt.setInt(1, id);
+      stmt.setString(1, username);
       try (var rs = stmt.executeQuery()) {
         if (rs.next()) {
           var usernameDB = rs.getString("username");
@@ -74,15 +74,18 @@ public class UserRepository {
 
           if (passwordDB.equals(password)) {
             System.out.println("password are a match, Logging in");
-            return new User(id, usernameDB, firstName, lastName, email, avatar);
+            return new LoginResponse(username,password);
           }
           else {
             throw new Exception("password are not a match, cant log in");
-        }
+          }
         }
       }
     }
-      System.out.println("No user found to log in");
-      return null;
+    System.out.println("No user found to log in");
+    return null;
   }
+
+  record LoginResponse(String username, String password) { }
 }
+

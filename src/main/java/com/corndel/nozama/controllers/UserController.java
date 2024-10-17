@@ -11,12 +11,18 @@ public class UserController {
         try {
 
             var logInRequest = ctx.bodyAsClass(UserRequest.class);
-            var users = UserRepository.logUserIn(logInRequest.id(), logInRequest.password());
-            ctx.json(users);
+            var user = UserRepository.logUserIn(logInRequest.username(),
+                    logInRequest.firstName(),logInRequest.lastName(), logInRequest.email(),
+                    logInRequest.avatar(), logInRequest.password());
+
+            ctx.json(user);
         } catch (Exception e) {
+            // test
             System.err.println(e.getMessage());
         }
     }
 }
 
-record UserRequest(Integer id, String password) { }
+
+record UserRequest(String username, String firstName , String lastName, String email, String avatar, String password) { }
+
