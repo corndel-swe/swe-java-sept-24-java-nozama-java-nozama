@@ -8,6 +8,9 @@ public class Product {
     private int stockQuantity;
     private String imageURL;
 
+    public Product() {
+    }
+
     public Product(String id, String name, String description, float price, int stockQuantity, String imageURL) {
         this.id = id;
         this.name = name;

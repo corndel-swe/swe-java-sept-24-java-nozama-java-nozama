@@ -25,4 +25,3 @@ public class UserController {
 
 
 record UserRequest(String username, String firstName , String lastName, String email, String avatar, String password) { }
-

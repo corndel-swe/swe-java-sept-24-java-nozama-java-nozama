@@ -1,7 +1,12 @@
 package com.corndel.nozama.repositories;
 
 import com.corndel.nozama.DB;
+import com.corndel.nozama.createUserRequest;
 import com.corndel.nozama.models.User;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +83,39 @@ public class UserRepository {
           }
           else {
             throw new Exception("password are not a match, cant log in");
-          }
+
+       
+      }
+    }
+  }
+    }
+
+  public static void removeUser(int id) throws SQLException, Exception {
+    String findQuery = "SELECT id, username from users WHERE id = ?";
+
+    try (Connection connection = DB.getConnection();
+         PreparedStatement findStmt = connection.prepareStatement(findQuery)) {
+
+      findStmt.setInt(1, id);
+
+      try (ResultSet findRs = findStmt.executeQuery()) {
+
+        if (!findRs.next()) {
+          throw new Exception("User not found. Can't remove what doesn't exist.");
+        }
+
+        String deleteQuery = "DELETE FROM users WHERE id = ?";
+
+        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+          deleteStmt.setInt(1, id);
+          deleteStmt.executeUpdate();
         }
       }
     }
+
     System.out.println("No user found to log in");
     return null;
   }
 
   record LoginResponse(String username, String password) { }
-}
 
