@@ -3,6 +3,7 @@ package com.corndel.nozama;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
+import com.corndel.nozama.models.User;
 
 public class App {
   private Javalin app;
@@ -27,6 +28,15 @@ public class App {
           var user = UserRepository.findById(id);
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
+    app.post(
+            "/users/login",
+            ctx ->{
+                User body = ctx.bodyAsClass(User.class);
+                var user = UserRepository.loginUser(body.getUsername(),body.getPassword());
+                ctx.status(201);
+                ctx.json(user);
+            }
+    );
   }
 
   public Javalin javalinApp() {

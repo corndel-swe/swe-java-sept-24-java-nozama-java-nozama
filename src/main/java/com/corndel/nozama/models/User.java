@@ -7,17 +7,23 @@ public class User {
   private String lastName;
   private String email;
   private String avatar;
-
-  public User(Integer id, String username, String firstName, String lastName, String email, String avatar) {
+  private String password;
+  public User(Integer id, String username, String firstName, String lastName, String email, String avatar , String password) {
     this.id = id;
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.avatar = avatar;
+    this.password =password;
   }
 
   public User(int id) {
+  }
+  public User() {
+  }
+
+  public User(int id, String username, String firstName, String lastName, String email, String avatar) {
   }
 
   public Integer getId() {
@@ -64,4 +70,11 @@ public class User {
     this.avatar = avatar;
   }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

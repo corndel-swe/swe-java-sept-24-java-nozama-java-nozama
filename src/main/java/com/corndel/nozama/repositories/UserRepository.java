@@ -54,7 +54,7 @@ public class UserRepository {
           var email = rs.getString("email");
           var avatar = rs.getString("avatar");
 
-          User user = new User(id, username, firstName, lastName, email, avatar);
+          User user = new User(id, username, firstName, lastName, email, avatar,null);
           return user;
         } else {
           System.out.println("not a valid id.");
@@ -103,7 +103,7 @@ public class UserRepository {
           var email = resultSet.getString("email");
           var avatar = resultSet.getString("avatar");
           System.out.println("CORRECT USERNAME AND PASSWORD");
-          return new User(userId, userName,firstName,lastName,email,avatar);
+          return new User(userId, userName,firstName,lastName,email,avatar,null);
         } else {
           System.out.println("No userName or password was found");
           return null;
