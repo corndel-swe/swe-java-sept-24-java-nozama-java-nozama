@@ -7,6 +7,7 @@ import com.corndel.nozama.repositories.ProductRepository;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App {
   private Javalin app;
@@ -17,7 +18,26 @@ public class App {
   }
 
   public App() {
-    app = Javalin.create();
+    app = Javalin.create(config -> {
+        config.router.apiBuilder(() -> {
+            path("/products", () -> {
+                get("", ProductController::getAllProducts);
+                get("/{productId}", ProductController::getProductById);
+                get("/category/{category}",
+                        ProductController::getProductsByCategory);
+                post("", ProductController::addNewProduct);
+                get("/{productId}/reviews", ReviewController::getReviewByProduct);
+                get("/{productId}/reviews/average", ReviewController::getAvgRatingByProduct);
+                post("/{productId}/reviews", ReviewController:: createReview);
+            });
+        });
+    });
+
+    app.exception(Exception.class, (e, ctx) -> {
+        ctx.status(500);
+        ctx.result("An unkown error occurred.");
+    });
+
     app.get(
         "/",
         ctx -> {
@@ -32,12 +52,6 @@ public class App {
           ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
         });
 
-    app.get("/products", ProductController::getAllProducts);
-    app.get("/products/{productId}", ProductController::getProductById);
-    app.get("/products/category/{category}",
-            ProductController::getProductsByCategory);
-    // can refactor to use Product rather than ProductRequest
-    app.post("/products/", ProductController::addNewProduct);
   }
 
   public Javalin javalinApp() {
