@@ -4,17 +4,30 @@ import com.corndel.nozama.createUserRequest;
 import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.http.Context;
+import io.javalin.http.BadRequestResponse;
+import io.javalin.http.NotFoundResponse;
 
 public class UserController {
-  public static void createUser(Context ctx) {
+  public static void createUser(Context ctx) throws Exception {
     createUserRequest body = ctx.bodyAsClass(createUserRequest.class);
+
+    boolean nullUsername = body.username() == null;
+    boolean nullFirstName = body.firstName() == null;
+    boolean nullLastName = body.lastName() == null;
+    boolean nullEmail = body.email() == null;
+    boolean nullPassword = body.password() == null;
+
+    if (nullUsername || nullFirstName || nullLastName || nullEmail || nullPassword) {
+      throw new BadRequestResponse("Invalid request body.");
+    }
+
     try {
       User user = UserRepository.insertUser(body);
       ctx.status(201);
       ctx.json(user);
     } catch (Exception e) {
       System.err.println(e.getMessage());
-      ctx.status(400);
+      ctx.status(500);
     }
   }
 
@@ -25,6 +38,7 @@ public class UserController {
       ctx.status(204);
     } catch (Exception e) {
       System.err.println(e.getMessage());
+      throw new NotFoundResponse("User not found");
     }
   }
 }
