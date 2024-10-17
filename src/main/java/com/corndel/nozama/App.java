@@ -30,33 +30,6 @@ public class App {
 
 
 
-//    app = Javalin.create();
-//    app.get(
-//        "/",
-//        ctx -> {
-//          var users = UserRepository.findAll();
-//          ctx.json(users);
-//        });
-//    app.get(
-//        "/users/{userId}",
-//        ctx -> {
-//          var id = Integer.parseInt(ctx.pathParam("userId"));
-//          var user = UserRepository.findById(id);
-//          ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
-//        });
-//    app.post(
-//            "/users/login",
-//            ctx ->{
-//                User body = ctx.bodyAsClass(User.class);
-//                var user = UserRepository.loginUser(body.getUsername(),body.getPassword());
-//                ctx.status(201);
-//                ctx.json(user);
-//            }
-//    );
-
-
-
-
     public Javalin javalinApp() {
     return app;
   }
