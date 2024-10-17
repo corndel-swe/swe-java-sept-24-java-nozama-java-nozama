@@ -1,12 +1,12 @@
 package com.corndel.nozama.repositories;
 
 import com.corndel.nozama.DB;
+import com.corndel.nozama.models.Product;
 import com.corndel.nozama.models.Review;
+import io.javalin.http.BadRequestResponse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,6 @@ public class ReviewRepository {
          var stmt = connection.prepareStatement(query)) {
 
       stmt.setInt(1, productId);
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy, h:mm:ss a");
 
       try (ResultSet resultSet = stmt.executeQuery()) {
         while (resultSet.next()) {
@@ -58,5 +57,31 @@ public class ReviewRepository {
         return postedReview;
       }
     }
+  }
+
+  public static float getAverageRating(int productId) throws SQLException {
+
+    var query = "SELECT AVG(reviews.rating) as averageRating FROM reviews JOIN products ON products.id = reviews.productId WHERE reviews.productId = ?";
+
+      float averageRating = 0;
+      try (var connection = DB.getConnection();
+           var stmt = connection.prepareStatement(query)) {
+
+          stmt.setInt(1, productId);
+
+          try (ResultSet resultSet = stmt.executeQuery()) {
+              while (resultSet.next()) {
+                averageRating =  resultSet.getFloat("averageRating");
+              }
+          }
+      }
+      if (averageRating <= 0) {
+        throw new BadRequestResponse("Product not found");
+      }
+      return averageRating;
+  }
+
+  public static void main(String[] args) throws SQLException {
+    System.out.println(getAverageRating(100));
   }
 }

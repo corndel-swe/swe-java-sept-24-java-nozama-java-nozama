@@ -38,9 +38,8 @@ public class App {
     app.delete("/users/{userId}", UserController::deleteUser);
 
 
+app.get("/products/{productId}/reviews/average", ReviewController::getAverageRating);
 
-
-      
 
     app.get("/products/{productId}/reviews", ReviewController::getReviewsByProduct);
 
