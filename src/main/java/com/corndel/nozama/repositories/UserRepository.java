@@ -10,7 +10,7 @@ public class UserRepository {
 
 
   public static List<User> findAll() throws SQLException {
-    var query = "SELECT id, username, firstName, lastName, email, avatar FROM users";
+    var query = "SELECT id, username, firstName, lastName, email, avatar FROM users;";
     try (var con = DB.getConnection();
          var stmt = con.createStatement();
          var rs = stmt.executeQuery(query);) {
@@ -54,7 +54,7 @@ public class UserRepository {
           var email = rs.getString("email");
           var avatar = rs.getString("avatar");
 
-          User user = new User(id, username, firstName, lastName, email, avatar, null);
+          User user = new User(id, username, firstName, lastName, email, avatar,null);
           return user;
         } else {
           System.out.println("not a valid id.");
@@ -103,7 +103,7 @@ public class UserRepository {
           var email = resultSet.getString("email");
           var avatar = resultSet.getString("avatar");
           System.out.println("CORRECT USERNAME AND PASSWORD");
-          return new User(userId, userName,firstName,lastName,email,avatar, null);
+          return new User(userId, userName,firstName,lastName,email,avatar,null);
         } else {
           System.out.println("No userName or password was found");
           return null;

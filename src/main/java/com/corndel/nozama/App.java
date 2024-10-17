@@ -1,9 +1,12 @@
 package com.corndel.nozama;
 
-import com.corndel.nozama.models.User;
+import com.corndel.nozama.controllers.UserController;
 import com.corndel.nozama.repositories.UserRepository;
 import io.javalin.Javalin;
-import io.javalin.http.HttpStatus;
+import static io.javalin.apibuilder.ApiBuilder.*;
+import com.corndel.nozama.controllers.ReviewController;
+import com.corndel.nozama.controllers.ProductController;
+
 
 public class App {
   private Javalin app;
@@ -14,40 +17,32 @@ public class App {
   }
 
   public App() {
-    app = Javalin.create();
-    app.get(
-        "/",
-        ctx -> {
-          var users = UserRepository.findAll();
-          ctx.json(users);
+
+    app = Javalin.create(config -> {
+        config.router.apiBuilder(() -> {
+            path("/products", () -> {
+                get("/{productId}/reviews", ReviewController::getReviewByProduct);
+                get("/{productId}/reviews/average", ReviewController::getAvgRatingByProduct);
+                post("/{productId}/reviews", ReviewController:: createReview);
+                get("", ProductController::getAllProducts);
+                get("/{productId}", ProductController::getProductById);
+                get("/category/{category}",
+                        ProductController::getProductsByCategory);
+                post("", ProductController::addNewProduct);
+            });
+          path("users", () -> {
+                  get("", UserController::getAllUsers);
+                  get("/{userId}", UserController::getUserById);
+                  post("/login", UserController::loginUser);
+              });
         });
-    app.get(
-        "/users/{userId}",
-        ctx -> {
-          var id = Integer.parseInt(ctx.pathParam("userId"));
-          var user = UserRepository.findById(id);
-          ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
-        });
+    });
 
-      app.post(
-              "/user",
-              ctx -> {
-                  User body = ctx.bodyAsClass(User.class);
-                  User user = UserRepository.createUser(
-                          body.getUsername(),
-                          body.getFirstName(),
-                          body.getLastName(),
-                          body.getEmail(),
-                          body.getAvatar(),
-                          body.getPassword()
-                  );
-                  System.out.println(user);
-                  ctx.status(201);
-                  ctx.json(user);
+    app.exception(Exception.class, (e, ctx) -> {
+        ctx.status(500);
+        ctx.result("An unknown error occurred.");
+    });
 
-
-              }
-      );
   }
 
   public Javalin javalinApp() {

@@ -8,34 +8,22 @@ public class User {
   private String email;
   private String avatar;
   private String password;
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public User() {}
-
-
-  public User(Integer id, String username, String firstName, String lastName, String email, String avatar, String password) {
+  public User(Integer id, String username, String firstName, String lastName, String email, String avatar , String password) {
     this.id = id;
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.avatar = (avatar == null || avatar.isEmpty()) ? DEFAULT_AVATAR : avatar;
-    this.password=password;
+    this.avatar = avatar;
+    this.password =password;
   }
-  public static String DEFAULT_AVATAR = "https://imgcdn.stablediffusionweb.com/2024/9/16/778175e0-33f9-4224-9e6b-5c0984042816.jpg";
 
   public User(int id) {
+  }
+  public User() {
+  }
+
+  public User(int id, String username, String firstName, String lastName, String email, String avatar) {
   }
 
   public Integer getId() {
@@ -79,17 +67,14 @@ public class User {
   }
 
   public void setAvatar(String avatar) {
-    this.avatar = (avatar == null || avatar.isEmpty()) ? DEFAULT_AVATAR : avatar;
+    this.avatar = avatar;
   }
 
-  @Override
-  public String toString() {
-    return "User{id=" + id +
-            ", username='" + username + '\'' +
-            ", firstName='" + firstName + '\'' +
-            ", lastName='" + lastName + '\'' +
-            ", email='" + email + '\'' +
-            ", avatar='" + avatar + '\'' + '}';
-  }
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
