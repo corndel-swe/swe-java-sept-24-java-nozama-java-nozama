@@ -1,9 +1,9 @@
 package com.corndel.nozama.controllers;
-
-import com.corndel.nozama.createUserRequest;
-import com.corndel.nozama.models.User;
 import com.corndel.nozama.repositories.UserRepository;
+import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
+import java.sql.SQLException;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.NotFoundResponse;
 
@@ -39,6 +39,25 @@ public class UserController {
     } catch (Exception e) {
       System.err.println(e.getMessage());
       throw new NotFoundResponse("User not found");
+
+
+
+public class UserController {
+    public static void userLogIn(Context ctx) {
+        try {
+
+            var logInRequest = ctx.bodyAsClass(UserRequest.class);
+            var user = UserRepository.logUserIn(logInRequest.username(),
+                    logInRequest.firstName(),logInRequest.lastName(), logInRequest.email(),
+                    logInRequest.avatar(), logInRequest.password());
+
+            ctx.json(user);
+        } catch (Exception e) {
+            // test
+            System.err.println(e.getMessage());
+        }
     }
-  }
 }
+
+
+record UserRequest(String username, String firstName , String lastName, String email, String avatar, String password) { }

@@ -8,22 +8,23 @@ import io.javalin.Javalin;
 import io.javalin.http.HttpStatus;
 
 public class App {
-    private Javalin app;
 
-    // Test comment
+  private Javalin app;
 
-    public static void main(String[] args) {
-        var app = new App().javalinApp();
-        app.start(8080);
-    }
+  public static void main(String[] args) {
+    var app = new App().javalinApp();
+    app.start(8080);
+  }
 
-    public App() {
-        app = Javalin.create();
+  public App() {
+    app = Javalin.create();
 
-
-        app.get("/", ctx -> {
-            var users = UserRepository.findAll();
-            ctx.json(users);
+    app.post("/users/login", UserController::userLogIn);
+    app.get(
+        "/",
+        ctx -> {
+          var users = UserRepository.findAll();
+          ctx.json(users);
         });
 
         app.get("/users/{userId}", ctx -> {
