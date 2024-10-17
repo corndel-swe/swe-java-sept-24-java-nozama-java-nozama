@@ -1,19 +1,10 @@
 package com.corndel.nozama;
 
-
 import com.corndel.nozama.controllers.UserController;
 import io.javalin.Javalin;
 import static io.javalin.apibuilder.ApiBuilder.*;
 import com.corndel.nozama.controllers.ReviewController;
 import com.corndel.nozama.controllers.ProductController;
-import com.corndel.nozama.models.Product;
-import com.corndel.nozama.models.ProductRequest;
-import com.corndel.nozama.repositories.ProductRepository;
-import com.corndel.nozama.repositories.UserRepository;
-import io.javalin.Javalin;
-import io.javalin.http.HttpStatus;
-import static io.javalin.apibuilder.ApiBuilder.*;
-import com.corndel.nozama.models.User;
 
 
 public class App {
@@ -37,7 +28,7 @@ public class App {
                 get("/category/{category}",
                         ProductController::getProductsByCategory);
                 post("", ProductController::addNewProduct);
-            });,
+            });
           path("users", () -> {
                   get("", UserController::getAllUsers);
                   get("/{userId}", UserController::getUserById);
@@ -52,8 +43,6 @@ public class App {
     });
 
   }
-
-
 
     public Javalin javalinApp() {
     return app;
