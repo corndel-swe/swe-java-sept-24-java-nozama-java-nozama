@@ -1,5 +1,6 @@
 package com.corndel.nozama;
 
+import com.corndel.nozama.controllers.ReviewController;
 import com.corndel.nozama.controllers.ProductController;
 import com.corndel.nozama.models.Product;
 import com.corndel.nozama.models.ProductRequest;
@@ -22,6 +23,9 @@ public class App {
     app = Javalin.create(config -> {
         config.router.apiBuilder(() -> {
             path("/products", () -> {
+                get("/{productId}/reviews", ReviewController::getReviewByProduct);
+                get("/{productId}/reviews/average", ReviewController::getAvgRatingByProduct);
+                post("/{productId}/reviews", ReviewController:: createReview);
                 get("", ProductController::getAllProducts);
                 get("/{productId}", ProductController::getProductById);
                 get("/category/{category}",
