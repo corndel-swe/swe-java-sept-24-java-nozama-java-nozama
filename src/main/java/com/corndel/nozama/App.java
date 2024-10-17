@@ -1,5 +1,9 @@
 package com.corndel.nozama;
 
+
+import com.corndel.nozama.controllers.UserController;
+import io.javalin.Javalin;
+import static io.javalin.apibuilder.ApiBuilder.*;
 import com.corndel.nozama.controllers.ReviewController;
 import com.corndel.nozama.controllers.ProductController;
 import com.corndel.nozama.models.Product;
@@ -11,6 +15,7 @@ import io.javalin.http.HttpStatus;
 import static io.javalin.apibuilder.ApiBuilder.*;
 import com.corndel.nozama.models.User;
 
+
 public class App {
   private Javalin app;
 
@@ -20,6 +25,7 @@ public class App {
   }
 
   public App() {
+
     app = Javalin.create(config -> {
         config.router.apiBuilder(() -> {
             path("/products", () -> {
@@ -31,7 +37,12 @@ public class App {
                 get("/category/{category}",
                         ProductController::getProductsByCategory);
                 post("", ProductController::addNewProduct);
-            });
+            });,
+          path("users", () -> {
+                  get("", UserController::getAllUsers);
+                  get("/{userId}", UserController::getUserById);
+                  post("/login", UserController::loginUser);
+              });
         });
     });
 
@@ -40,31 +51,11 @@ public class App {
         ctx.result("An unknown error occurred.");
     });
 
-    app.get(
-        "/",
-        ctx -> {
-          var users = UserRepository.findAll();
-          ctx.json(users);
-        });
-    app.get(
-        "/users/{userId}",
-        ctx -> {
-          var id = Integer.parseInt(ctx.pathParam("userId"));
-          var user = UserRepository.findById(id);
-          ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
-        });
-    app.post(
-            "/users/login",
-            ctx ->{
-                User body = ctx.bodyAsClass(User.class);
-                var user = UserRepository.loginUser(body.getUsername(),body.getPassword());
-                ctx.status(201);
-                ctx.json(user);
-            }
-    );
   }
 
-  public Javalin javalinApp() {
+
+
+    public Javalin javalinApp() {
     return app;
   }
 }
