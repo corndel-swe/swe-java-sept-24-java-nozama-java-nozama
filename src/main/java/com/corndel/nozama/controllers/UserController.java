@@ -34,4 +34,32 @@ public class UserController {
             throw new UnauthorizedResponse("Invalid username or password");
         }
     }
+
+    public static void createUser(Context ctx) throws SQLException {
+        User body = ctx.bodyAsClass(User.class);
+        var user = UserRepository.createUser(body.getUsername(),
+                body.getFirstName(),
+                body.getLastName(),
+                body.getEmail(),
+                body.getAvatar(),
+                body.getPassword());
+        if (user != null) {
+            System.out.println(user);
+            ctx.status(201).json(user);
+        } else {
+            throw new UnauthorizedResponse("Cannot create User");
+        }
+    }
+    public static void deleteUser(Context ctx) throws SQLException {
+        var id = Integer.parseInt(ctx.pathParam("userId"));
+        var deletedUser = UserRepository.deleteUser(id);
+
+        if (deletedUser != null) {
+            System.out.println(deletedUser);
+            ctx.status(204).json(deletedUser);
+        } else {
+            throw new BadRequestResponse("Cannot find user with this Id");
+        }
+    }
+
 }

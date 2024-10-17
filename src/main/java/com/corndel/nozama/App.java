@@ -34,7 +34,12 @@ public class App {
                   get("", UserController::getAllUsers);
                   get("/{userId}", UserController::getUserById);
                   post("/login", UserController::loginUser);
+                  delete("{userId}",UserController::deleteUser);
               });
+            path("user", () -> {
+                post("/login", UserController::createUser);
+
+            });
         });
     });
 
