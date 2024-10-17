@@ -47,7 +47,7 @@ public class App {
 
 
 
-        app.post("/products/{productId}/reviews", ReviewController::postReview);
+    app.post("/products/{productId}/reviews", ReviewController::postReview);
 
     app.get("/products", ProductController::getAllProducts);
     app.get("/products/{id}", ProductController::getProductById);
