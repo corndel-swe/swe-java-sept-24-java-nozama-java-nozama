@@ -3,6 +3,7 @@ import com.corndel.nozama.models.Review;
 import com.corndel.nozama.repositories.ReviewRepository;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
+import io.javalin.http.ForbiddenResponse;
 import io.javalin.http.HttpStatus;
 
 import java.sql.SQLException;
@@ -16,7 +17,8 @@ public class ReviewController {
             var reviews = ReviewRepository.getReviewsByProduct(id);
             ctx.status(200).json(reviews);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            ctx.status(404);
+            throw new BadRequestResponse("Product not found.");
         }
     }
 
@@ -26,7 +28,8 @@ public class ReviewController {
             Review createdReview = ReviewRepository.postReview(newReview);
             ctx.status(201).json(createdReview);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            ctx.status(400);
+            throw new ForbiddenResponse("Invalid request body.");
         }
     }
 
