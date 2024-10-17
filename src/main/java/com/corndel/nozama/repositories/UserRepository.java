@@ -10,7 +10,7 @@ public class UserRepository {
 
 
   public static List<User> findAll() throws SQLException {
-    var query = "SELECT id, username, firstName, lastName, email, avatar FROM users";
+    var query = "SELECT id, username, firstName, lastName, email, avatar FROM users;";
     try (var con = DB.getConnection();
          var stmt = con.createStatement();
          var rs = stmt.executeQuery(query);) {
@@ -24,7 +24,7 @@ public class UserRepository {
         var email = rs.getString("email");
         var avatar = rs.getString("avatar");
 
-        users.add(new User(id, username, firstName, lastName, email, avatar));
+        users.add(new User(id, username, firstName, lastName, email, avatar, null));
       }
 
       return users;
