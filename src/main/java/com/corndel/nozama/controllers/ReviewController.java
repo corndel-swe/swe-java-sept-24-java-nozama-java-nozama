@@ -11,6 +11,7 @@ import java.util.Map;
 
 
 public class ReviewController {
+    record ReviewRequest(Integer productId, Integer userId, Integer rating, String reviewText) {}
     public static void getReviewsByProduct(Context ctx)  {
         try {
             int id = Integer.parseInt(ctx.pathParam("productId"));
@@ -23,14 +24,17 @@ public class ReviewController {
     }
 
     public static void postReview(Context ctx) {
-        Review newReview = ctx.bodyAsClass(Review.class);
+        String requestBody = ctx.body(); // Get raw request body
+        System.out.println("Request body: " + requestBody);
+
         try {
-            Review createdReview = ReviewRepository.postReview(newReview);
+            ReviewRequest newReview = ctx.bodyAsClass(ReviewRequest.class);
+            Review createdReview = ReviewRepository.postReview(newReview.productId(), newReview.userId(), newReview.rating(), newReview.reviewText());
             ctx.status(201).json(createdReview);
         } catch (Exception e) {
             ctx.status(400);
-            throw new ForbiddenResponse("Invalid request body.");
-        }
+            ctx.result("Invalid request body: " + e.getMessage());
+            e.printStackTrace();      }
     }
 
     public static void getAverageRating(Context ctx) {
