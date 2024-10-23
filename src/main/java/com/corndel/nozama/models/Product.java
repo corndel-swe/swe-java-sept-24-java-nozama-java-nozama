@@ -1,7 +1,7 @@
 package com.corndel.nozama.models;
 
 public class Product {
-    private String id;
+    private int id; // Changed from String to int
     private String name;
     private String description;
     private float price;
@@ -11,7 +11,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String id, String name, String description, float price, int stockQuantity, String imageURL) {
+    public Product(int id, String name, String description, float price, int stockQuantity, String imageURL) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -20,7 +20,15 @@ public class Product {
         this.imageURL = imageURL;
     }
 
-    public String getId() {
+    public Product(String name, String description, float price, int stockQuantity, String imageURL) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.imageURL = imageURL;
+    }
+
+    public int getId() { // Return type is now int
         return id;
     }
 
