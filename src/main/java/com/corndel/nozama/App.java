@@ -20,18 +20,11 @@ public class App {
         app = Javalin.create();
 
         // User routes
-        app.post("/users/login", UserController::userLogIn);
-        app.get("/", ctx -> {
-            var users = UserRepository.findAll();
-            ctx.json(users);
-        });
-        app.get("/users/{userId}", ctx -> {
-            var id = Integer.parseInt(ctx.pathParam("userId"));
-            var user = UserRepository.findById(id);
-            ctx.status(HttpStatus.IM_A_TEAPOT).json(user);
-        });
+        app.get("/users", UserController::getAllUsers);
+        app.get("/users/{userId}", UserController::getUserById);
         app.post("/users", UserController::createUser);
         app.delete("/users/{userId}", UserController::deleteUser);
+        app.post("/users/login", UserController::userLogIn);
 
         // Product routes
         app.get("/products", ProductController::getAllProducts);
