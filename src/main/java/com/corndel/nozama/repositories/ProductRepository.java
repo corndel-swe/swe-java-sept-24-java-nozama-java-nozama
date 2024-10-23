@@ -2,12 +2,15 @@ package com.corndel.nozama.repositories;
 
 import com.corndel.nozama.DB;
 import com.corndel.nozama.models.Product;
+import io.javalin.http.NotFoundResponse;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductRepository {
 
+    // Retrieve all products
     public static List<Product> findAll() throws SQLException {
         var query = "SELECT id, name, description, price, stockQuantity, imageURL FROM products";
 
@@ -17,7 +20,7 @@ public class ProductRepository {
 
             var products = new ArrayList<Product>();
             while (rs.next()) {
-                var id = rs.getString("id");
+                var id = rs.getInt("id");
                 var name = rs.getString("name");
                 var description = rs.getString("description");
                 var price = rs.getFloat("price");
@@ -31,13 +34,14 @@ public class ProductRepository {
         }
     }
 
-    public static Product findById(String id) throws SQLException {
+    // Retrieve a product by ID
+    public static Product findById(int id) throws SQLException {
         var query = "SELECT id, name, description, price, stockQuantity, imageURL FROM products WHERE id = ?";
 
         try (var con = DB.getConnection();
              var stmt = con.prepareStatement(query)) {
 
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
             try (var rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     var name = rs.getString("name");
@@ -54,41 +58,71 @@ public class ProductRepository {
         }
     }
 
+    // Create a new product
     public static void createProduct(Product product) throws SQLException {
-        var query = "INSERT INTO products (id, name, description, price, stockQuantity, imageURL) VALUES (?, ?, ?, ?, ?, ?)";
+        var query = "INSERT INTO products (name, description, price, stockQuantity, imageURL) VALUES (?, ?, ?, ?, ?)";
 
         try (var con = DB.getConnection();
              var stmt = con.prepareStatement(query)) {
-            stmt.setString(1, product.getId());
-            stmt.setString(2, product.getName());
-            stmt.setString(3, product.getDescription());
-            stmt.setFloat(4, product.getPrice());
-            stmt.setInt(5, product.getStockQuantity());
-            stmt.setString(6, product.getImageURL());
+            // Removed ID from the insert statement, assuming it's auto-increment
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setFloat(3, product.getPrice());
+            stmt.setInt(4, product.getStockQuantity());
+            stmt.setString(5, product.getImageURL());
 
             stmt.executeUpdate();
         }
     }
 
-    public static List<Product> findByCategory(String categoryId) throws SQLException {
+    // Update a product by ID
+    public static void updateProduct(int id, Product product) throws SQLException {
+        var query = "UPDATE products SET name = ?, description = ?, price = ?, stockQuantity = ?, imageURL = ? WHERE id = ?";
+
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query)) {
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setFloat(3, product.getPrice());
+            stmt.setInt(4, product.getStockQuantity());
+            stmt.setString(5, product.getImageURL());
+            stmt.setInt(6, id); // Change to setInt
+
+            stmt.executeUpdate();
+        }
+    }
+
+    // Delete a product by ID
+    public static void deleteProduct(int id) throws SQLException {
+        var query = "DELETE FROM products WHERE id = ?";
+
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query)) {
+            stmt.setInt(1, id); // Change to setInt
+            stmt.executeUpdate();
+        }
+    }
+
+    // Find products by category ID
+    public static List<Product> findByCategory(int categoryId) throws SQLException {
         var query = "SELECT p.id, p.name, p.description, p.price, p.stockQuantity, p.imageURL FROM products p " +
                 "JOIN product_categories pc ON p.id = pc.productId " +
                 "WHERE pc.categoryId = ?";
 
         try (var con = DB.getConnection();
              var stmt = con.prepareStatement(query)) {
-            stmt.setString(1, categoryId);
+            stmt.setInt(1, categoryId);
             try (var rs = stmt.executeQuery()) {
                 var products = new ArrayList<Product>();
                 while (rs.next()) {
-                    var id = rs.getString("id");
+                    var id = rs.getInt("id");
                     var name = rs.getString("name");
                     var description = rs.getString("description");
                     var price = rs.getFloat("price");
                     var stockQuantity = rs.getInt("stockQuantity");
                     var imageURL = rs.getString("imageURL");
 
-                    products.add(new Product(id, name, description, price, stockQuantity, imageURL));
+                    products.add(new Product(id, name, description, price, stockQuantity, imageURL)); // Update constructor
                 }
 
                 return products;
@@ -96,42 +130,30 @@ public class ProductRepository {
         }
     }
 
+    public static void updateProductPartial(int id, Product product) throws SQLException {
 
-    public static void main(String[] args) {
-        try {
-            // Test findAll
-//            System.out.println("All Products:");
-//            List<Product> products = findAll();
-//            for (Product product : products) {
-//                System.out.println(product);
-//            }
+        //COALESCE allows us to keep the values already there if not updated with the request - helping avoid null errors
+        var query = "UPDATE products SET " +
+                "name = COALESCE(?, name), " +
+                "description = COALESCE(?, description), " +
+                "price = COALESCE(?, price), " +
+                "stockQuantity = COALESCE(?, stockQuantity), " +
+                "imageURL = COALESCE(?, imageURL) " +
+                "WHERE id = ?";
 
-            // Test findById
-            String productId = "300";
-            Product product = findById(productId);
-            if (product != null) {
-                System.out.println("Product found: " + product);
-            } else {
-                System.out.println("Product not found.");
-            }
+        try (var con = DB.getConnection();
+             var stmt = con.prepareStatement(query)) {
+            stmt.setString(1, product.getName());
+            stmt.setString(2, product.getDescription());
+            stmt.setFloat(3, product.getPrice());
+            stmt.setInt(4, product.getStockQuantity());
+            stmt.setString(5, product.getImageURL());
+            stmt.setInt(6, id);
 
-            // Test createProduct
-//            Product newProduct = new Product("300", "New Product", "This is a new product", 19.99f, 100, "http://example.com/image.jpg");
-//            createProduct(newProduct);
-//            System.out.println("Product created: " + newProduct);
-
-            // Test findByCategory
-//            String categoryId = "7";
-//            System.out.println("Products in Category " + categoryId + ":");
-//            List<Product> categoryProducts = findByCategory(categoryId);
-//            for (Product catProduct : categoryProducts) {
-//                System.out.println(catProduct);
-//            }
-
-        } catch (SQLException e) {
-            System.err.println("Error: " + e.getMessage());
+            stmt.executeUpdate();
         }
     }
+
 
 }
 
