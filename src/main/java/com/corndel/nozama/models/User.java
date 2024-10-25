@@ -8,6 +8,7 @@ public class User {
   private String email;
   private String avatar;
   private String password;
+
   public User(Integer id, String username, String firstName, String lastName, String email, String avatar , String password) {
     this.id = id;
     this.username = username;

@@ -88,7 +88,6 @@ public class UserRepository {
 
   public static User loginUser(String username, String password) throws SQLException {
     var query = "SELECT id, username, firstName, lastName, email, avatar FROM users WHERE username = ? AND password = ?";
-
     try (var connection = DB.getConnection();
          var statement = connection.prepareStatement(query)) {
 
