@@ -37,7 +37,7 @@ public class App {
                   delete("{userId}",UserController::deleteUser);
               });
             path("user", () -> {
-                post("/login", UserController::createUser);
+                post("", UserController::createUser);
 
             });
         });
